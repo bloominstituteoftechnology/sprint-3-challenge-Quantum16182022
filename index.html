@@ -217,25 +217,33 @@
   }
 
   work() {
-    this.ants = this.ants.map(ant => ({...ant, health: ant.health - 20}));
-    this.ants = this.ants.filter(ant => ant.health > 0);
-    return this.ants.length > 0 ? `${this.ants.length} ants starting work!` : "No ants here. Did you work them to death?";
-  }
+  let startingAnts = this.ants.length;
+  this.ants = this.ants.map(ant => ({...ant, health: ant.health - 20}));
+  this.ants = this.ants.filter(ant => ant.health > 0);
 
+  if (this.ants.length === 0 && startingAnts <= 0) {
+    return "No ants here. Did you work them to death?"
+  } else if (startingAnts > 0) {
+    return `${startingAnts} ants starting work!`;
+  } else {
+    return "No ants here. Did you work them to death?";
+  }
+}
   feed(antName) {
-    let fed = false;
+    let found = false;
     this.ants = this.ants.map(ant => {
       if (ant.name === antName) {
-        fed = true;
+        found = true;
         return {...ant, health: ant.health + 15};
       } else {
         return ant;
       }
     });
-    return fed ? "Yum!" : `${antName} not found!`;
+
+    return found ? "Yum!" : `${antName} not found!`;
   }
 }
-       
+    
 
     // 🧪 TESTS, do not make any changes below this line ===================
     // 🧪 TESTS, do not make any changes below this line ===================
@@ -250,7 +258,7 @@
       testClass('CHALLENGE 1 - class Integers', [
         function () {
           let actual, description = 'getAll returns all the ints'
-          let expected = [1, 2, 3, 4]
+          let expected = [1, 2, 3, 4] 
           try {
             const ints = new Integers(1, 2, 3, 4)
             actual = ints.getAll()
